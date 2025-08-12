@@ -357,13 +357,14 @@ class SafariBooks:
         self.base_url = self.book_info["web_url"]
 
         self.clean_book_title = "".join(self.escape_dirname(self.book_title).split(",")[:2]) \
-                                + " ({0})".format(self.book_id)
+                                + "_{0}".format(self.book_id)
 
         books_dir = os.path.join(PATH, "Books")
         if not os.path.isdir(books_dir):
             os.mkdir(books_dir)
 
         self.BOOK_PATH = os.path.join(books_dir, self.clean_book_title)
+        self.BOOK_PATH = self.BOOK_PATH.replace(" ", "")
         self.display.set_output_dir(self.BOOK_PATH)
         self.css_path = ""
         self.images_path = ""
@@ -407,7 +408,7 @@ class SafariBooks:
         if not args.no_cookies:
             json.dump(self.session.cookies.get_dict(), open(COOKIES_FILE, "w"))
 
-        self.display.done(os.path.join(self.BOOK_PATH, self.book_id + ".epub"))
+        self.display.done(os.path.join(self.BOOK_PATH, self.clean_book_title + ".epub"))
         self.display.unregister()
 
         if not self.display.in_error and not args.log:
